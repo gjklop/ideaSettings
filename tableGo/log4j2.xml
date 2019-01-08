@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="WARN">
+    <properties>
+        <property name="LOG_HOME">logs</property>
+        <property name="FILE_NAME">TableGo</property>
+        <property name="LOGO_LEVEL">debug</property>
+        <property name="PATTERN_LAYOUT">%p:[%d{yyyy-MM-dd HH:mm:ss.SSS}][%c.%M()-line:%L] - %m%n</property>
+    </properties>
+    
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${PATTERN_LAYOUT}"/>
+        </Console>
+
+        <RollingRandomAccessFile name="rollingRandomAccessFile" fileName="${LOG_HOME}/${FILE_NAME}.log" filePattern="${LOG_HOME}/${FILE_NAME}_%d{yyyyMMdd}_%i.log">
+            <PatternLayout pattern="${PATTERN_LAYOUT}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="2 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+        
+        <Async name="asyncAppender">
+            <AppenderRef ref="rollingRandomAccessFile"/>
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Root level="${LOGO_LEVEL}">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="asyncAppender"/>
+        </Root>
+        <Logger name="org.apache.commons.configuration" level="error" additivity="true"></Logger>
+        <Logger name="org.apache.xmlgraphics" level="error" additivity="true"></Logger>
+        <Logger name="org.docx4j" level="error" additivity="true"></Logger>
+    </Loggers>
+</Configuration>
